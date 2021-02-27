@@ -14,14 +14,14 @@ from fairseq import options, tasks, utils
 from fairseq.data import indexed_dataset
 from fairseq.binarizer import Binarizer
 from multiprocessing import Pool
-
+from user.bert_nmt import BertTranslationTask
 import os
 import shutil
 
 
 def main(args):
     utils.import_user_module(args)
-
+    from user.bert_nmt import BertBasedDictionary
     print(args)
 
     os.makedirs(args.destdir, exist_ok=True)
@@ -74,11 +74,11 @@ def main(args):
             )
         tgt_dict = src_dict
     else:
-        if args.srcdict:
-            src_dict = task.load_dictionary(args.srcdict)
-        else:
-            assert args.trainpref, "--trainpref must be set if --srcdict is not specified"
-            src_dict = build_dictionary([train_path(args.source_lang)], src=True)
+#        if args.srcdict:
+#            src_dict = task.load_dictionary(args.srcdict)
+#        else:
+#            assert args.trainpref, "--trainpref must be set if --srcdict is not specified"
+#            src_dict = build_dictionary([train_path(args.source_lang)], src=True)
 
         if target:
             if args.tgtdict:
@@ -89,7 +89,8 @@ def main(args):
         else:
             tgt_dict = None
 
-    src_dict.save(dict_path(args.source_lang))
+#    src_dict.save(dict_path(args.source_lang))
+    src_dict = BertBasedDictionary(args.bert_name)
     if target and tgt_dict is not None:
         tgt_dict.save(dict_path(args.target_lang))
 

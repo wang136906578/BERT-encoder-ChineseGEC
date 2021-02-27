@@ -145,6 +145,7 @@ class TranslationTask(FairseqTask):
         super().__init__(args)
         self.src_dict = src_dict
         self.tgt_dict = tgt_dict
+        self.bert_name = args.bert_name
 
     @classmethod
     def setup_task(cls, args, **kwargs):

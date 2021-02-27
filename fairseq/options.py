@@ -222,6 +222,8 @@ def add_preprocess_args(parser):
                        help="target language")
     group.add_argument("--trainpref", metavar="FP", default=None,
                        help="train file prefix")
+    parser.add_argument('--bert-name', default=None,
+                    help='pretrained bert model name')
     group.add_argument("--validpref", metavar="FP", default=None,
                        help="comma separated, valid file prefixes")
     group.add_argument("--testpref", metavar="FP", default=None,

@@ -20,9 +20,9 @@ If you find this work helpful in your research, please cite as:
 - other depencies required by [fairseq](https://github.com/pytorch/fairseq)
 # How to use
 ## Download the data and the pre-trained model
-The official NLPCC2018_GEC training and test data can be downloaded from (https://github.com/zhaoyyoo/NLPCC2018_GEC). In the official training data, one error sentences may have multiple corrections, we divide them into seperate parts. Since there are no official development data, we randomly extract 5,000 sentences from the training data as the development data. We also segment all sentences into characters. Here is our preprocessed data (https://drive.google.com/file/d/1Huy3QHN6hwfXOE_WjnRERBZyHffuRkv6/view?usp=sharing).
+The official NLPCC2018_GEC training and test data can be downloaded from [here](https://github.com/zhaoyyoo/NLPCC2018_GEC). In the official training data, one error sentences may have multiple corrections, we divide them into seperate parts. Since there are no official development data, we randomly extract 5,000 sentences from the training data as the development data. We also segment all sentences into characters. Here is our [preprocessed data](https://drive.google.com/file/d/1Huy3QHN6hwfXOE_WjnRERBZyHffuRkv6/view?usp=sharing).
 
-For pre-trained model, see (https://github.com/ymcui/Chinese-BERT-wwm). The pre-trained model we used in our work is ``` RoBERTa-wwm-ext, Chinese ```
+For pre-trained model, see [here](https://github.com/ymcui/Chinese-BERT-wwm). The pre-trained model we used in our work is ``` RoBERTa-wwm-ext, Chinese ```
 ## Use fairseq command to turn the data into binary datasets
 ```
 python preprocess.py  --user-dir ./user  \
@@ -51,4 +51,24 @@ python generate.py $DATA_BIN_DIR \
 --task bert_translation  -s src -t trg  --user-dir ./user \
 --path $SAVED_MODEL/checkpoint_best.pt --batch-size 32 \
 --beam 12  > $OUTPUT_PATH/bert_encoder.txt
+```
+## Evaluate
+Download the [PKUNLP word segmentation tools](http://59.108.48.37:9014/lcwm/pkunlp/downloads/libgrass-ui.tar.gz), and [m2scorer](https://github.com/nusnlp/m2scorer).
+Use ``` fairseq_reformat.py``` to get the raw text output. 
+```
+python fairseq_reformat.py $OUTPUT_PATH/bert_encoder.txt
+```
+Delete the space and [UNK] tokens.
+```
+sed 's/<unk>//g' < $OUTPUT_PATH/bert_encoder.txt.reformat > bert_encoder.nounk.txt
+sed 's/ //g' < bert_encoder.nounk.txt > bert_encoder.nospac.txt
+```
+Segment the sentence into words using [PKUNLP word segmentation tools](http://59.108.48.37:9014/lcwm/pkunlp/downloads/libgrass-ui.tar.gz).
+```
+cd libgrass-ui
+python pkunlp_segment.py --corpus $PATH/bert_encoder.nospac.txt
+```
+Evaluate using [m2scorer](https://github.com/nusnlp/m2scorer). The gold edit file is in [official datasets](https://github.com/zhaoyyoo/NLPCC2018_GEC).
+```
+python $PATH/m2scorer.py $PATH/bert_encoder.nospac.txt.seg $PATH/gold/gold.01
 ```

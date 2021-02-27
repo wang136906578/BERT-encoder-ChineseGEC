@@ -16,4 +16,5 @@ If you find this work helpful in your research, please cite as:
 #Requirements
 - python >= 3.5
 - PyTorch == 1.1.0
-- pytorch_transformers == 
+- pytorch_transformers >= 1.2.0
+

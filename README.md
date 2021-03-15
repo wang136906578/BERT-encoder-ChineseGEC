@@ -41,7 +41,7 @@ python train.py $DATA_BIN_DIR \
 --seed 1 --user-dir ./user/ \
 --optimizer adam \
 --task bert_translation --batch-size 32 \
---arch bert_nmt --max-epoch 20 \
+--arch bert_nmt --max-epoch 30 \
 --save-dir  $SAVED_MODEL \
 -s src -t trg --lr 0.00003
 ```

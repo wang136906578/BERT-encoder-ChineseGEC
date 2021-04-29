@@ -39,7 +39,7 @@ python preprocess.py  --user-dir ./user  \
 ```
 python train.py $DATA_BIN_DIR \
 --seed 1 --user-dir ./user/ \
---optimizer adam \
+--optimizer adam --bert-name  $PATH_TO_PRETRAINED_MODEL \
 --task bert_translation --batch-size 32 \
 --arch bert_nmt --max-epoch 30 \
 --save-dir  $SAVED_MODEL \
